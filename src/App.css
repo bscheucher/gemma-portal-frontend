@@ -114,6 +114,34 @@ body {
   font-style: italic;
 }
 
+/* ── Error banner ── */
+.error-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  background: #2d1b1b;
+  border: 1px solid #6e1a1a;
+  color: #f85149;
+  font-size: 0.875rem;
+}
+
+.retry-btn {
+  padding: 0.2rem 0.6rem;
+  border: 1px solid #6e1a1a;
+  border-radius: 6px;
+  background: transparent;
+  color: #f85149;
+  cursor: pointer;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.retry-btn:hover {
+  background: #3d1f1f;
+}
+
 /* ── History toolbar ── */
 .history-toolbar {
   display: flex;
@@ -172,6 +200,9 @@ body {
 .input {
   flex: 1;
   resize: none;
+  overflow-y: auto;
+  min-height: 2.4rem;
+  max-height: 200px;
   background: #0d1117;
   color: #e6edf3;
   border: 1px solid #30363d;

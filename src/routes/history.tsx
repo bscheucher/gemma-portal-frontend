@@ -10,17 +10,39 @@ interface ChatMessage {
   content: string;
 }
 
+function makeTimeoutSignal(ms: number): { signal: AbortSignal; clear: () => void } {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), ms);
+  return { signal: controller.signal, clear: () => clearTimeout(id) };
+}
+
 function HistoryPage() {
   const [history, setHistory] = useState<ChatMessage[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const load = () => {
     setLoading(true);
-    fetch('/api/chat/history')
-      .then((r) => r.json())
+    setError(null);
+    const { signal, clear } = makeTimeoutSignal(30_000);
+    fetch('/api/chat/history', { signal })
+      .then((r) => {
+        if (!r.ok) throw new Error(`status ${r.status}`);
+        return r.json();
+      })
       .then((data: ChatMessage[]) => setHistory(data))
-      .catch(() => setHistory([]))
-      .finally(() => setLoading(false));
+      .catch((err) => {
+        const isTimeout = err instanceof DOMException && err.name === 'AbortError';
+        setError(
+          isTimeout
+            ? 'Request timed out. Please try again.'
+            : 'Failed to load history. Is the backend running?'
+        );
+      })
+      .finally(() => {
+        clear();
+        setLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -28,8 +50,17 @@ function HistoryPage() {
   }, []);
 
   const clearHistory = async () => {
-    await fetch('/api/chat/history', { method: 'DELETE' });
-    setHistory([]);
+    if (!window.confirm('Clear all conversation history? This cannot be undone.')) return;
+    const { signal, clear } = makeTimeoutSignal(30_000);
+    try {
+      const res = await fetch('/api/chat/history', { method: 'DELETE', signal });
+      if (!res.ok) throw new Error(`status ${res.status}`);
+      setHistory([]);
+    } catch {
+      setError('Failed to clear history. Please try again.');
+    } finally {
+      clear();
+    }
   };
 
   return (
@@ -38,12 +69,21 @@ function HistoryPage() {
         <span className="history-count">
           {loading ? 'Loading…' : `${history.length} message${history.length !== 1 ? 's' : ''}`}
         </span>
-        <button className="clear-btn" onClick={clearHistory} disabled={history.length === 0}>
+        <button className="clear-btn" onClick={clearHistory} disabled={loading || history.length === 0}>
           Clear history
         </button>
       </div>
 
-      {!loading && history.length === 0 && (
+      {error && (
+        <div className="error-banner">
+          {error}
+          <button className="retry-btn" onClick={load}>
+            Retry
+          </button>
+        </div>
+      )}
+
+      {!loading && !error && history.length === 0 && (
         <div className="empty">No conversation history yet.</div>
       )}
 
