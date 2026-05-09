@@ -112,10 +112,11 @@ function ChatPage() {
         buffer = lines.pop()!; // keep incomplete last line
 
         for (const line of lines) {
-          if (!line.startsWith('data: ')) continue;
+          if (!line.startsWith('data:')) continue;
+          const dataStr = line.startsWith('data: ') ? line.slice(6) : line.slice(5);
 
           // Backend sends either a JSON string (token), "[DONE]", or {"model":"..."} object
-          const parsed: string | { model: string } = JSON.parse(line.slice(6));
+          const parsed: string | { model: string } = JSON.parse(dataStr);
 
           if (typeof parsed === 'object') {
             setModel(parsed.model);
