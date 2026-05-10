@@ -11,6 +11,7 @@
   "dependencies": {
     "@tanstack/react-router": "^1.168.17",
     "@tanstack/router-plugin": "^1.167.16",
+    "dotenv": "^17.4.2",
     "react": "^19.2.3",
     "react-dom": "^19.2.3"
   },
