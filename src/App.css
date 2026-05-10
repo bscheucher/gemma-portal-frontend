@@ -241,3 +241,122 @@ body {
   opacity: 0.4;
   cursor: not-allowed;
 }
+
+/* ── Conversation list (History page) ── */
+.conv-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.conv-card {
+  border: 1px solid #30363d;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #0d1117;
+  transition: border-color 0.15s;
+}
+
+.conv-card:hover {
+  border-color: #484f58;
+}
+
+.conv-card.active {
+  border-color: #1f6feb;
+}
+
+.conv-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.7rem 1rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.conv-chevron {
+  font-size: 1.1rem;
+  color: #484f58;
+  transition: transform 0.2s, color 0.15s;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.conv-chevron.open {
+  transform: rotate(90deg);
+  color: #8b949e;
+}
+
+.conv-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex: 1;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.conv-model-tag {
+  font-size: 0.72rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 9999px;
+  background: #21262d;
+  color: #8b949e;
+  white-space: nowrap;
+}
+
+.conv-sep {
+  color: #30363d;
+  font-size: 0.8rem;
+}
+
+.conv-time {
+  font-size: 0.8rem;
+  color: #8b949e;
+  white-space: nowrap;
+}
+
+.conv-count {
+  font-size: 0.8rem;
+  color: #484f58;
+  white-space: nowrap;
+}
+
+.conv-delete-btn {
+  padding: 0.2rem 0.55rem;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  background: transparent;
+  color: #6e7681;
+  cursor: pointer;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+
+.conv-delete-btn:hover {
+  border-color: #f85149;
+  color: #f85149;
+  background: #2d1b1b;
+}
+
+.conv-messages {
+  border-top: 1px solid #30363d;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  background: #0d1117;
+}
+
+.conv-messages .bubble {
+  max-width: 85%;
+}
+
+.conv-messages-loading,
+.conv-messages-empty {
+  font-size: 0.85rem;
+  color: #484f58;
+  text-align: center;
+  padding: 0.5rem 0;
+}
